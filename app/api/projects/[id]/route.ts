@@ -5,10 +5,11 @@ import type { UpdateProject } from '@/types';
 // GET /api/projects/[id] - Obtener un proyecto por ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const project = await getProjectById(params.id);
+    const { id } = await params;
+    const project = await getProjectById(id);
 
     if (!project) {
       return NextResponse.json(
@@ -30,12 +31,13 @@ export async function GET(
 // PUT /api/projects/[id] - Actualizar un proyecto
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body: UpdateProject = await request.json();
 
-    await updateProject(params.id, body);
+    await updateProject(id, body);
 
     return NextResponse.json({ message: 'Proyecto actualizado exitosamente' });
   } catch (error) {
@@ -50,10 +52,11 @@ export async function PUT(
 // DELETE /api/projects/[id] - Eliminar un proyecto
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await deleteProject(params.id);
+    const { id } = await params;
+    await deleteProject(id);
 
     return NextResponse.json({ message: 'Proyecto eliminado exitosamente' });
   } catch (error) {

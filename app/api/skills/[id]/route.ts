@@ -5,9 +5,10 @@ import type { UpdateSkill } from '@/types';
 // PUT /api/skills/[id] - Actualizar una habilidad
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body: UpdateSkill = await request.json();
 
     // Validar nivel si se proporciona
@@ -18,7 +19,7 @@ export async function PUT(
       );
     }
 
-    await updateSkill(params.id, body);
+    await updateSkill(id, body);
 
     return NextResponse.json({ message: 'Habilidad actualizada exitosamente' });
   } catch (error) {
@@ -33,10 +34,11 @@ export async function PUT(
 // DELETE /api/skills/[id] - Eliminar una habilidad
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await deleteSkill(params.id);
+    const { id } = await params;
+    await deleteSkill(id);
 
     return NextResponse.json({ message: 'Habilidad eliminada exitosamente' });
   } catch (error) {
