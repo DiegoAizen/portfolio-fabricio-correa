@@ -10,13 +10,21 @@ interface SkillFormProps {
   mode: "create" | "edit";
 }
 
+interface SkillFormData {
+  name: string;
+  category: "frontend" | "backend" | "tools" | "other";
+  level: number;
+  icon: string;
+  order: number;
+}
+
 export default function SkillForm({ skill, mode }: SkillFormProps) {
   const router = useRouter();
   const { createSkill, updateSkill } = useSkills();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<SkillFormData>({
     name: skill?.name || "",
     category: skill?.category || "frontend",
     level: skill?.level || 3,
@@ -85,7 +93,7 @@ export default function SkillForm({ skill, mode }: SkillFormProps) {
           <select
             required
             value={formData.category}
-            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+            onChange={(e) => setFormData({ ...formData, category: e.target.value as "frontend" | "backend" | "tools" | "other" })}
             className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="frontend">Frontend</option>
